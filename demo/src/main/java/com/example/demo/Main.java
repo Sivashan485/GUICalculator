@@ -13,8 +13,14 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class Main extends Application {
@@ -30,7 +36,11 @@ public class Main extends Application {
     private Button minusButton = createButton("MINUS", 300,150);
 
     private Button selectFile = createButton("Open File", 400,100);
-    private Button saveFile = createButton("Save File", 400,150);
+    private Button saveFile = createButton("Save current Result", 400,150);
+    private static String selectedPath = null;
+    static ArrayList resultList = new ArrayList<String>();
+
+
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -76,21 +86,53 @@ public class Main extends Application {
     }
 
     private static void selectSaveClickEvent(MouseEvent mouseEvent) {
+        try {
+            FileWriter fileWriter = new FileWriter(selectedPath);
+            String result = null;
+            for (Object o : resultList) {
 
+                result = "\n"+result + o;
+
+            }
+            fileWriter.write(result);
+            fileWriter.close();
+            System.out.println("Text saved successfully.");
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving the text to the file: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private static void selectFileClickEvent(MouseEvent mouseEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select File");
+
+        Window primaryStage = null;
+        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+        if (selectedFile != null) {
+            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+            selectedPath = selectedFile.getAbsolutePath();
+
+            // You can perform actions with the selected file here
+        } else {
+            System.out.println("No file selected.");
+        }
     }
 
     private static void minusClickEvent(MouseEvent mouseEvent) {
         Integer minus = calculateSubtraction(firstEntryField.getText(),secondEntryField.getText());
         results.setText(minus.toString());
+        resultList.add(minus);
+
     }
 
-    private static void selectFileClickEvent(MouseEvent mouseEvent) {
-        
-    }
+
 
     private static void additionClick(MouseEvent mouseEvent) {
         Integer sum = calculateAddition(secondEntryField.getText(),firstEntryField.getText());
         results.setText(sum.toString());
+        resultList.add(sum);
+
     }
 
     private static Integer calculateAddition(String numberA, String numberB){
