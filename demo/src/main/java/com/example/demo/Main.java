@@ -1,15 +1,12 @@
 package com.example.demo;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -17,27 +14,33 @@ import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import org.w3c.dom.Text;
+
+import java.util.concurrent.ExecutionException;
 
 public class Main extends Application {
     private final static String applicationInstruction = "Welcome to our application! With this software, you can efficiently manage and store your\n calculations directly on your Personal Computer.";
+    private Label label = setWelcomeLabel("WELCOME", Color.web("blue"), Color.web("black"));
+    private Label instructionLabel = createLabel(applicationInstruction, 10, 250);
+    private static Label results = createLabel("RESULTS: ", 10, 150);
+
+    private static TextField firstEntryField = createEntryField(10,100);
+    private static TextField secondEntryField = createEntryField(100,100);
+
+    private Button addButton = createButton("PLUS", 300,100);
+    private Button minusButton = createButton("MINUS", 300,150);
+
+    private Button selectFile = createButton("Open File", 400,100);
+    private Button saveFile = createButton("Save File", 400,150);
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Label label = setWelcomeLabel("WELCOME", Color.web("blue"), Color.web("black"));
-        Label instructionLabel = createLabel(applicationInstruction, 10, 250);
-        Label results = createLabel("RESULTS: ", 10, 150);
-
-        TextField firstEntryField = createEntryField(10,100);
-        TextField secondEntryField = createEntryField(100,100);
 
 
+        addButton.setOnMouseClicked(Main::additionClick);
 
+        minusButton.setOnMouseClicked(Main::minusClickEvent);
 
-        Button addButton = createButton("PLUS", 300,100);
-        Button minusButton = createButton("MINUS", 300,150);
-
-        Button selectFile = createButton("Open File", 400,100);
-        Button saveFile = createButton("Save File", 400,150);
+        selectFile.setOnMouseClicked(Main::selectFileClickEvent);
+        saveFile.setOnMouseClicked(Main::selectSaveClickEvent);
 
 
         //Create root node
@@ -72,7 +75,32 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private Label createLabel(String text, int positionX, int positionY){
+    private static void selectSaveClickEvent(MouseEvent mouseEvent) {
+
+    }
+
+    private static void minusClickEvent(MouseEvent mouseEvent) {
+        Integer minus = calculateSubtraction(firstEntryField.getText(),secondEntryField.getText());
+        results.setText(minus.toString());
+    }
+
+    private static void selectFileClickEvent(MouseEvent mouseEvent) {
+        
+    }
+
+    private static void additionClick(MouseEvent mouseEvent) {
+        Integer sum = calculateAddition(secondEntryField.getText(),firstEntryField.getText());
+        results.setText(sum.toString());
+    }
+
+    private static Integer calculateAddition(String numberA, String numberB){
+        return Integer.parseInt(numberA)+Integer.parseInt(numberB);
+    }
+    private static Integer calculateSubtraction(String numberA, String numberB){
+        return Integer.parseInt(numberA)-Integer.parseInt(numberB);
+    }
+
+    private static Label createLabel(String text, int positionX, int positionY){
         Label label = new Label();
         label.setText(text);
         label.setLayoutX(positionX);
@@ -102,7 +130,7 @@ public class Main extends Application {
         return button;
     }
 
-    private TextField createEntryField( int positionX, int positionY){
+    private static TextField createEntryField(int positionX, int positionY){
         TextField entryField = new TextField();
         entryField.setLayoutX(positionX);
         entryField.setLayoutY(positionY);
