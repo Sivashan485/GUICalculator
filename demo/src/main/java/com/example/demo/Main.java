@@ -20,13 +20,16 @@ import javafx.stage.Stage;
 import org.w3c.dom.Text;
 
 public class Main extends Application {
+    private final static String applicationInstruction = "Welcome to our application! With this software, you can efficiently manage and store your\n calculations directly on your Personal Computer.";
     @Override
     public void start(Stage primaryStage) throws Exception {
         Label label = setWelcomeLabel("WELCOME", Color.web("blue"), Color.web("black"));
-
+        Label instructionLabel = createLabel(applicationInstruction, 10, 250);
+        Label results = createLabel("RESULTS: ", 10, 150);
 
         TextField firstEntryField = createEntryField(10,100);
         TextField secondEntryField = createEntryField(100,100);
+
 
 
 
@@ -48,6 +51,8 @@ public class Main extends Application {
         root.getChildren().add(minusButton);
         root.getChildren().add(selectFile);
         root.getChildren().add(saveFile);
+        root.getChildren().add(instructionLabel);
+        root.getChildren().add(results);
 
         //Create scene with root node with size
         Scene scene = new Scene(root, 600, 300);
@@ -65,6 +70,15 @@ public class Main extends Application {
         //Add scene to the stage and make it visible
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private Label createLabel(String text, int positionX, int positionY){
+        Label label = new Label();
+        label.setText(text);
+        label.setLayoutX(positionX);
+        label.setLayoutY(positionY);
+        label.setMaxWidth(600);
+        return label;
     }
 
     private Label setWelcomeLabel(String text, Color colorA, Color colorB){
